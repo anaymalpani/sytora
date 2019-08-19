@@ -1,9 +1,7 @@
-import pandas as pd
 import numpy as np
-import re
+import pandas as pd
 
-
-cui_vecs_df = pd.read_csv('./cui2vec_pretrained.csv')
+cui_vecs_df = pd.read_csv('data/cui2vec_pretrained.csv')
 cui_vecs_df.set_index('CUI', inplace=True)
 x = cui_vecs_df.to_string(header=False,index=True, index_names=False)
 tfile = open('cui2vec_pretrained.txt', 'a')
@@ -27,4 +25,5 @@ def read_glove_vecs(file):
 
 words, word_to_vec_map = read_glove_vecs('data/cui2vec_pretrained.txt')
 
-print("now convert to magnitude python -m pymagnitude.converter -i ./cui2vec_pretrained.txt -o ./cui2vec_pretrained.magnitude")
+print(
+    "now convert to magnitude python -m pymagnitude.converter -i cui2vec_pretrained.txt -o cui2vec_pretrained.magnitude")

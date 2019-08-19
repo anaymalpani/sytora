@@ -8,14 +8,16 @@
 #
 
 
-import sys
 import os.path
-import logging
+import sys
+from importlib import reload
 
-from sqlite import SQLite			# for py-umls standalone
+from sqlite import SQLite  # for py-umls standalone
 
 reload(sys)
-sys.setdefaultencoding('utf-8')
+
+
+# sys.setdefaultencoding('utf-8')
 
 class UMLS (object):
 	""" A class for importing UMLS terminologies into an SQLite database.

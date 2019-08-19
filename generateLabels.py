@@ -1,22 +1,26 @@
+import codecs
+import csv
 import sqlite3
-import csv, codecs, cStringIO
+from io import StringIO
+
 import pandas as pd
+
 
 class UnicodeWriter:
     """
-    A CSV writer which will write rows to CSV file "f", 
+    A CSV writer which will write rows to CSV file "f",
     which is encoded in the given encoding.
     """
 
     def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
         # Redirect output to a queue
-        self.queue = cStringIO.StringIO()
+        self.queue = StringIO()
         self.writer = csv.writer(self.queue, dialect=dialect, **kwds)
         self.stream = f
         self.encoder = codecs.getincrementalencoder(encoding)()
 
     def writerow(self, row):
-        self.writer.writerow([unicode(s).encode("utf-8") for s in row])
+        self.writer.writerow([s.encode("utf-8") for s in row])
         # Fetch UTF-8 output from the queue ...
         data = self.queue.getvalue()
         data = data.decode("utf-8")
@@ -31,7 +35,8 @@ class UnicodeWriter:
         for row in rows:
             self.writerow(row)
 
-conn = sqlite3.connect('./flaskapp/databases/umls.db')
+
+conn = sqlite3.connect('./flaskapp/umls/databases/umls.db')
 c = conn.cursor()
 c.execute('select * from descriptions')
 
@@ -43,13 +48,15 @@ umlsDF.columns = ['CUI', 'LAT', 'SAB', 'TTY', 'STR', 'STY']
 
 result = pd.read_csv('./disease-symptom-cuis.csv', encoding='utf-8', index_col=None, header=0)
 
+
 def findConcept(cui, lat):
-    results = umlsDF.loc[(umlsDF['CUI']==cui) & (umlsDF['LAT']==lat)]["STR"].unique()
-    
+    results = umlsDF.loc[(umlsDF['CUI'] == cui) & (umlsDF['LAT'] == lat)]["STR"].unique()
+
     if len(results) >= 1:
         return results[0]
     else:
         return cui
+
 
 import io, json
 
@@ -60,9 +67,9 @@ sy_cuis = result["Symptom"].unique()
 
 for lat in languages:
     currentLatOut = []
-    
+
     for sy in sy_cuis:
         currentLatOut.append({"label": findConcept(sy, lat), "value": sy})
-        
+
     with io.open(labelsDir + convertIso[lat] + '_Labels.js', 'w', encoding='utf-8') as f:
         f.write("exports." + convertIso[lat] + "LABELS = " + json.dumps(currentLatOut, ensure_ascii=False) + ";")
