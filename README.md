@@ -1,4 +1,7 @@
 # Sytora
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1d1fd2f255044e3c9d35cf57b1d3e3ef)](https://app.codacy.com/app/anaymalpani/sytora?utm_source=github.com&utm_medium=referral&utm_content=anaymalpani/sytora&utm_campaign=Badge_Grade_Dashboard)
+
 Sytora is a multilingual symptom-disease classification app. Translation is managed through the UMLS coding standard. A multinomial Naive Bayes classifier is trained on a handpicked dataset, which is freely available under CC4.0. 
 
 To get started:
